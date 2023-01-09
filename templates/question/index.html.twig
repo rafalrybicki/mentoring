@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Question index{% endblock %}
+
+{% block body %}
+    <h1>Question index</h1>
+    {% for question in questions %}
+        <div class="question">
+            <p>{{ question.content }}</p>
+
+            {{ question.answers }}
+
+            <br>
+
+            {{ include('question/_delete_form.html.twig') }}
+            
+            <a href="{{ path('app_question_edit', {'id': question.id}) }}">
+                <button>Edit</button>
+            </a>
+        </div>
+    {% else %}
+        <p>no records found</p>
+    {% endfor %}
+
+    <a href="{{ path('app_question_new') }}">Create new</a>
+{% endblock %}
