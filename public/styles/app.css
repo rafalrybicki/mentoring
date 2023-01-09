@@ -8,12 +8,10 @@ body {
 
 .question form {
   display: inline-block;
-  margin-top: 5px;
 }
 
 form #question div {
   display: flex;
-  margin-bottom: 10px;
 }
 
 form #question label {
@@ -24,4 +22,8 @@ form #question input,
 form #question textarea
 {
   width: 500px;
+}
+
+ul {
+  margin: 0;
 }
