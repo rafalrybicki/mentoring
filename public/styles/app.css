@@ -18,9 +18,7 @@ form #question label {
   width: 100px;
 }
 
-form #question input,
-form #question textarea
-{
+form #question input {
   width: 500px;
 }
 

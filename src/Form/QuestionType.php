@@ -13,10 +13,7 @@ class QuestionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content')
-            ->add('answers', TextareaType::class, [
-                'attr' => ['rows' => '10']
-            ]);
+            ->add('content');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

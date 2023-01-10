@@ -16,9 +16,6 @@ class Question
     #[ORM\Column(length: 100)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $answers = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -32,18 +29,6 @@ class Question
     public function setContent(string $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    public function getAnswers(): ?string
-    {
-        return $this->answers;
-    }
-
-    public function setAnswers(string $answers): self
-    {
-        $this->answers = $answers;
 
         return $this;
     }
