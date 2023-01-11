@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Answer;
 use App\Entity\Question;
 use App\Form\QuestionType;
 use App\Repository\QuestionRepository;
@@ -25,6 +26,9 @@ class QuestionController extends AbstractController
     public function new(Request $request, QuestionRepository $questionRepository): Response
     {
         $question = new Question();
+        $question->addAnswer(new Answer());
+        $question->addAnswer(new Answer());
+
         $form = $this->createForm(QuestionType::class, $question);
         $form->handleRequest($request);
 
@@ -35,7 +39,6 @@ class QuestionController extends AbstractController
         }
 
         return $this->renderForm('question/new.html.twig', [
-            'question' => $question,
             'form' => $form,
         ]);
     }

@@ -9,8 +9,12 @@
             {% apply markdown_to_html %}
                 {{ question.content }}
             {% endapply %}
-
-            <br>
+                {% for answer in question.answers %}
+                    <div>
+                        <input type="checkbox" id="{{ answer.id }}" name="{{ answer.id }}">
+                        {{ answer.content }}
+                    </div>
+                {% endfor %}
 
             {{ include('question/_delete_form.html.twig') }}
 

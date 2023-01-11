@@ -1,4 +1,65 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_errors(form) }}
+    {{ form_row(form.content) }}
+    {{ form_label(form.answers) }}
+    
+    <div class="answers"
+         data-index="{{ form.answers|length > 0 ? form.answers|last.vars.name + 1 : 0 }}"
+         data-prototype="{{ form_row(form.answers.vars.prototype)|e('html_attr') }}"
+    >
+        {% for answer in form.answers %}
+            {{ form_row(answer) }}
+        {% endfor %}
+    </div>
+
+    <button type="button" class="add_answer" data-collection-holder-class="answers">Add an answer</button>
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
+{% block javascripts %}
+    <script>
+        const addFormToCollection = (e) => {
+            const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+            const item = document.createElement('div');
+
+            item.innerHTML = collectionHolder
+                .dataset
+                .prototype
+                .replace(
+                    /__name__/g,
+                    collectionHolder.dataset.index
+                );
+                
+            addAnswerFormDeleteLink(item);
+
+            collectionHolder.appendChild(item);
+
+            collectionHolder.dataset.index++;
+        };
+
+        document
+            .querySelectorAll('.add_answer')
+            .forEach(btn => {
+                btn.addEventListener("click", addFormToCollection)
+            });
+
+        const addAnswerFormDeleteLink = (item) => {
+            const removeFormButton = document.createElement('button');
+            removeFormButton.innerText = 'Delete';
+
+            item.append(removeFormButton);
+
+            removeFormButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                item.remove();
+            });
+        }
+
+        document
+            .querySelectorAll('.answers > div')
+            .forEach((answer) => {
+                addAnswerFormDeleteLink(answer)
+            }) 
+    </script>
+{% endblock %}

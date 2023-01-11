@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 class Question
 {
@@ -18,8 +21,23 @@ class Question
     #[ORM\Column(length: 100)]
     private ?string $content = null;
 
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Assert\Count(
+        min: 2,
+        max: 4,
+        minMessage: 'The question must contain 2 to 4 answers!',
+        maxMessage: 'The question must contain 2 to 4 answers!',
+    )]
     private Collection $answers;
+
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ($this->getCorrectAnswers()->isEmpty()) {
+            $context->buildViolation('At least one answer must be correct!')
+                ->addViolation();
+        }
+    }
 
     public function __construct()
     {
@@ -71,5 +89,12 @@ class Question
         }
 
         return $this;
+    }
+
+    public function getCorrectAnswers(): Collection
+    {
+        return $this->getAnswers()->filter(function (Answer $answer) {
+            return $answer->isIsCorrect();
+        });
     }
 }
