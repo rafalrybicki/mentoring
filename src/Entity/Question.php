@@ -19,6 +19,9 @@ class Question
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Length(
+        max: 100,
+    )]
     private ?string $content = null;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, cascade: ['persist'], orphanRemoval: true)]
@@ -33,7 +36,7 @@ class Question
     #[Assert\Callback]
     public function validate(ExecutionContextInterface $context, $payload)
     {
-        if ($this->getCorrectAnswers()->isEmpty()) {
+        if (!$this->hasCorrectAnswers()) {
             $context->buildViolation('At least one answer must be correct!')
                 ->addViolation();
         }
@@ -81,20 +84,15 @@ class Question
 
     public function removeAnswer(Answer $answer): self
     {
-        if ($this->answers->removeElement($answer)) {
-            // set the owning side to null (unless already changed)
-            if ($answer->getQuestion() === $this) {
-                $answer->setQuestion(null);
-            }
-        }
+        $this->answers->removeElement($answer);
 
         return $this;
     }
 
-    public function getCorrectAnswers(): Collection
+    public function hasCorrectAnswers(): bool
     {
-        return $this->getAnswers()->filter(function (Answer $answer) {
-            return $answer->isIsCorrect();
-        });
+        return $this->getAnswers()->exists(
+            fn ($key, Answer $answer) => $answer->isCorrect() == true
+        );
     }
 }
