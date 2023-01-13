@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class)]
 class Answer
@@ -18,6 +19,10 @@ class Answer
     private ?Question $question = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 1,
+        max: 255,
+    )]
     private ?string $content = null;
 
     #[ORM\Column]
@@ -33,7 +38,7 @@ class Answer
         return $this->question;
     }
 
-    public function setQuestion(?Question $question): self
+    public function setQuestion(Question $question): self
     {
         $this->question = $question;
 
@@ -52,7 +57,7 @@ class Answer
         return $this;
     }
 
-    public function isIsCorrect(): ?bool
+    public function isCorrect(): bool
     {
         return $this->isCorrect;
     }
