@@ -45,6 +45,8 @@ class Question
     public function __construct()
     {
         $this->answers = new ArrayCollection();
+        $this->addAnswer(new Answer());
+        $this->addAnswer(new Answer());
     }
 
     public function getId(): ?int

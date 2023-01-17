@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Answer;
 use App\Entity\Question;
 use App\Form\QuestionType;
 use App\Repository\QuestionRepository;
@@ -14,26 +13,31 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/questions')]
 class QuestionController extends AbstractController
 {
+    public QuestionRepository $questionRepository;
+
+    public function __construct(QuestionRepository $questionRepository)
+    {
+        $this->questionRepository = $questionRepository;
+    }
+
     #[Route('/', name: 'app_question_index', methods: ['GET'])]
-    public function index(QuestionRepository $questionRepository): Response
+    public function index(): Response
     {
         return $this->render('question/index.html.twig', [
-            'questions' => $questionRepository->findAll(),
+            'questions' => $this->questionRepository->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'app_question_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, QuestionRepository $questionRepository): Response
+    public function new(Request $request): Response
     {
         $question = new Question();
-        $question->addAnswer(new Answer());
-        $question->addAnswer(new Answer());
 
         $form = $this->createForm(QuestionType::class, $question);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $questionRepository->save($question, true);
+            $this->questionRepository->save($question, true);
 
             return $this->redirectToRoute('app_question_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -52,13 +56,13 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_question_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Question $question, QuestionRepository $questionRepository): Response
+    public function edit(Request $request, Question $question): Response
     {
         $form = $this->createForm(QuestionType::class, $question);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $questionRepository->save($question, true);
+            $this->questionRepository->save($question, true);
 
             return $this->redirectToRoute('app_question_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -70,11 +74,13 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_question_delete', methods: ['POST'])]
-    public function delete(Request $request, Question $question, QuestionRepository $questionRepository): Response
+    public function delete(Request $request, Question $question): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $question->getId(), $request->request->get('_token'))) {
-            $questionRepository->remove($question, true);
+        if (!$this->isCsrfTokenValid('question_delete' . $question->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException("Incorrect token");
         }
+
+        $this->questionRepository->remove($question, true);
 
         return $this->redirectToRoute('app_question_index', [], Response::HTTP_SEE_OTHER);
     }
