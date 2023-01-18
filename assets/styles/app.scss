@@ -1,7 +1,11 @@
 @import "~bootstrap/scss/bootstrap";
 
 body {
-    background-color: lightgray;
+    background-color: whitesmoke;
+}
+
+h1 {
+    margin: 20px 0;
 }
 
 .question {
@@ -13,6 +17,10 @@ body {
 }
 
 .question form {
+    display: inline-block;
+}
+
+form {
     display: inline-block;
 }
 
