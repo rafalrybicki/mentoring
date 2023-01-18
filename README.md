@@ -15,3 +15,7 @@ symfony server:start -d
 ```
 symfony console doctrine:fixtures:load
 ```
+
+```
+yarn watch
+```
