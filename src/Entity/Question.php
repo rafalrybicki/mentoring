@@ -49,6 +49,11 @@ class Question
         $this->addAnswer(new Answer());
     }
 
+    public function __toString(): string
+    {
+        return $this->content;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
