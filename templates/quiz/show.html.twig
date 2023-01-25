@@ -5,6 +5,14 @@
 {% block body %}
     <h1>{{ quiz.name }}</h1>
 
+    {% for quizQuestion in quiz.quizQuestions %}
+        <div class="quizQuestion">
+            {{ quizQuestion.question }}
+        </div>
+    {% else %}
+        <p>no questions found</p>
+    {% endfor %}
+
     <a href="{{ path('app_quiz_index') }}">back to list</a>
 
     <a href="{{ path('app_quiz_edit', {'id': quiz.id}) }}">edit</a>

@@ -1,4 +1,44 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-success btn-sm">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'col-9'}}) }}
+    {{ form_row(form.name) }}
+
+    <div class="mb-3 d-flex">
+        <div class="col-6">
+            {{ form_label(form.quizQuestions) }}
+
+            <div
+                id="quiz_quizQuestions"
+                class="list-group me-2 h-100"
+                data-next-item-order="{{ form.quizQuestions.count }}"
+            >
+                {% for quizQuestion in form.quizQuestions %}
+                    <div 
+                        class="list-group-item tinted"
+                        data-question-id="{{ quizQuestion.vars.value.question.id }}"
+                    >
+                        {{ quizQuestion.vars.value.question.content }}
+                        {{ form_row(quizQuestion) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-6">
+            <legend class="col-form-label ms-2">Available questions</legend>
+            <div id="questions" class="list-group ms-2 h-100">
+                {% for question in availableQuestions %}
+                    <div
+                        class="list-group-item tinted"
+                        data-question-id="{{ question.id }}"
+                    >
+                        {{ question }} 
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {{ form_errors(form) }}
+
+    <button class="btn btn-success btn-sm mx-auto">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+

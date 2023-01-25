@@ -17,3 +17,51 @@ const $ = require('jquery');
 $(document).ready(function () {
   $('[data-toggle="popover"]').popover();
 });
+
+import Sortable from 'sortablejs';
+
+new Sortable(document.getElementById('quiz_quizQuestions'), {
+  group: 'shared',
+  animation: 150,
+  onAdd: function (e) {
+    const sequence = e.newIndex;
+    let itemOrder = e.to.dataset.itemOrder;
+
+    e.item.innerHTML = `
+    ${e.item.innerText}
+    <fieldset class="mb-3">
+      <div id="quiz_quizQuestions_${itemOrder}">
+        <input 
+            type="hidden"
+            id="quiz_quizQuestions_${itemOrder}_sequence"
+            name="quiz[quizQuestions][${sequence}][sequence]"
+            value="${sequence}"
+            class="sequence"
+        > 
+        <input 
+            type="hidden"
+            id="quiz_quizQuestions_${itemOrder}_question"
+            name="quiz[quizQuestions][${sequence}][question]"
+            value="${e.item.dataset.questionId}"
+            class="question"
+        >
+      </div>
+    </fieldset>
+    `
+  },
+  onRemove: function (e) {
+    e.item.innerHTML = e.item.innerText;
+  },
+  onSort: function (e) {
+    const sequences = document.querySelectorAll('.sequence');
+
+    sequences.forEach((el, i) => {
+      el.setAttribute('value', i);
+    });
+  }
+});
+
+new Sortable(document.getElementById('questions'), {
+  group: 'shared',
+  animation: 150,
+});

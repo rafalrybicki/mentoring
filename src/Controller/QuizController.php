@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Quiz;
 use App\Form\QuizType;
+use App\Repository\QuestionRepository;
 use App\Repository\QuizRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,11 +30,16 @@ class QuizController extends AbstractController
     }
 
     #[Route('/new', name: 'app_quiz_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, QuestionRepository $questionRepository): Response
     {
         $quiz = new Quiz();
+
         $form = $this->createForm(QuizType::class, $quiz);
         $form->handleRequest($request);
+
+        $selectedQuestions = implode(',', $quiz->getQuestionsIds());
+
+        $availableQuestions = $questionRepository->findOthers($selectedQuestions);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->quizRepository->save($quiz, true);
@@ -42,8 +48,8 @@ class QuizController extends AbstractController
         }
 
         return $this->renderForm('quiz/new.html.twig', [
-            'quiz' => $quiz,
             'form' => $form,
+            'availableQuestions' => $availableQuestions
         ]);
     }
 
@@ -56,10 +62,15 @@ class QuizController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_quiz_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Quiz $quiz): Response
+    public function edit(Request $request, Quiz $quiz, QuestionRepository $questionRepository): Response
     {
+        $existingQuestions = $quiz->getQuestionsIds();
         $form = $this->createForm(QuizType::class, $quiz);
         $form->handleRequest($request);
+
+        $selectedQuestions = implode(',', $quiz->getQuestionsIds());
+
+        $availableQuestions = $questionRepository->findOthers($selectedQuestions);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->quizRepository->save($quiz, true);
@@ -70,6 +81,8 @@ class QuizController extends AbstractController
         return $this->renderForm('quiz/edit.html.twig', [
             'quiz' => $quiz,
             'form' => $form,
+            'availableQuestions' => $availableQuestions,
+            'existingQuestions' => $existingQuestions
         ]);
     }
 

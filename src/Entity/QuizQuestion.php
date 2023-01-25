@@ -6,12 +6,15 @@ use App\Repository\QuizQuestionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: QuizQuestionRepository::class)]
 #[UniqueEntity(
     fields: ['quiz', 'question'],
-    errorPath: 'question',
-    message: 'This question is already used in this quiz.',
+    errorPath: 'quiz',
+    message: 'This question is already used in this quiz. {{ label }}',
 )]
+
 class QuizQuestion
 {
     #[ORM\Id]
@@ -29,6 +32,11 @@ class QuizQuestion
 
     #[ORM\Column]
     private ?int $sequence = null;
+
+    public function __toString(): string
+    {
+        return $this->question;
+    }
 
     public function getId(): ?int
     {

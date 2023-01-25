@@ -54,3 +54,11 @@ ul {
 .answer>div {
     flex: 1;
 }
+
+fieldset.mb-3 {
+    display: none;
+}
+
+.list-group-item {
+    cursor: pointer;
+}

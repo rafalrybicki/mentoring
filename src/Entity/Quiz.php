@@ -6,6 +6,7 @@ use App\Repository\QuizRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuizRepository::class)]
@@ -18,11 +19,18 @@ class Quiz
 
     #[ORM\Column(length: 50)]
     #[Assert\Length(
+        min: 3,
         max: 50,
     )]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'quiz', targetEntity: QuizQuestion::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'quiz', targetEntity: QuizQuestion::class, cascade: ['persist'], orphanRemoval: true)]
+    #[OrderBy(["sequence" => "ASC"])]
+    #[Assert\Valid()]
+    #[Assert\Count(
+        min: 3,
+        minMessage: 'The quiz must contain at least 3 questions!',
+    )]
     private Collection $quizQuestions;
 
     public function __construct()
@@ -75,5 +83,12 @@ class Quiz
         $this->quizQuestions->removeElement($quizQuestion);
 
         return $this;
+    }
+
+    public function getQuestionsIds(): array
+    {
+        return $this->quizQuestions->map(
+            fn (QuizQuestion $quizQuestion) => $quizQuestion->getQuestion()->getId()
+        )->toArray();
     }
 }
