@@ -11,7 +11,6 @@
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
-        "doctrine/persistence": "^2.5",
         "league/commonmark": "^2.3",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.15",
@@ -86,8 +85,7 @@
         ]
     },
     "conflict": {
-        "symfony/symfony": "*",
-        "doctrine/persistence": "^2.5"
+        "symfony/symfony": "*"
     },
     "extra": {
         "symfony": {
@@ -104,6 +102,7 @@
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^6.2",
         "symfony/stopwatch": "6.2.*",
-        "symfony/web-profiler-bundle": "6.2.*"
+        "symfony/web-profiler-bundle": "6.2.*",
+        "zenstruck/foundry": "^1.28"
     }
 }

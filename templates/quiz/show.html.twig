@@ -6,11 +6,20 @@
     <h1>{{ quiz.name }}</h1>
 
     {% for quizQuestion in quiz.quizQuestions %}
-        <div class="quizQuestion">
-            {{ quizQuestion.question }}
+        <div class="question">
+            {% apply markdown_to_html %}
+                {{ quizQuestion.question.content }}
+            {% endapply %}
+            
+            {% for answer in quizQuestion.question.answers %}
+                <div>
+                    <input type="checkbox" id="{{ answer.id }}" name="{{ answer.id }}">
+                    {{ answer.content }}
+                </div>
+            {% endfor %}
         </div>
     {% else %}
-        <p>no questions found</p>
+        <p>no records found</p>
     {% endfor %}
 
     <a href="{{ path('app_quiz_index') }}">back to list</a>

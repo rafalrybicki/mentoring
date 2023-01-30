@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(
     fields: ['quiz', 'question'],
     errorPath: 'quiz',
-    message: 'This question is already used in this quiz. {{ label }}',
+    message: "Questions must be uniqe",
 )]
 
 class QuizQuestion

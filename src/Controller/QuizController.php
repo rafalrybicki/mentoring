@@ -72,7 +72,7 @@ class QuizController extends AbstractController
         $selectedQuestions = implode(',', $quiz->getQuestionsIds());
 
         $availableQuestions = $questionRepository->findOthers($selectedQuestions);
-        dump($existingQuestions);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $this->quizRepository->save($quiz, true);
 

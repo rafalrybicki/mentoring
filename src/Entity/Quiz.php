@@ -29,7 +29,7 @@ class Quiz
     #[Assert\Valid()]
     #[Assert\Count(
         min: 3,
-        minMessage: 'The quiz must contain at least 3 questions!',
+        minMessage: "The quiz must contain at least 3 questions!",
     )]
     private Collection $quizQuestions;
 
