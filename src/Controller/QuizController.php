@@ -49,7 +49,8 @@ class QuizController extends AbstractController
 
         return $this->renderForm('quiz/new.html.twig', [
             'form' => $form,
-            'availableQuestions' => $availableQuestions
+            'availableQuestions' => $availableQuestions,
+            'existingQuestions' => []
         ]);
     }
 
@@ -71,7 +72,7 @@ class QuizController extends AbstractController
         $selectedQuestions = implode(',', $quiz->getQuestionsIds());
 
         $availableQuestions = $questionRepository->findOthers($selectedQuestions);
-
+        dump($existingQuestions);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->quizRepository->save($quiz, true);
 

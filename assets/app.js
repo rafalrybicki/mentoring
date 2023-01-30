@@ -25,7 +25,7 @@ new Sortable(document.getElementById('quiz_quizQuestions'), {
   animation: 150,
   onAdd: function (e) {
     const sequence = e.newIndex;
-    let itemOrder = e.to.dataset.itemOrder;
+    let itemOrder = e.item.dataset.itemOrder;
 
     e.item.innerHTML = `
     ${e.item.innerText}
@@ -34,14 +34,14 @@ new Sortable(document.getElementById('quiz_quizQuestions'), {
         <input 
             type="hidden"
             id="quiz_quizQuestions_${itemOrder}_sequence"
-            name="quiz[quizQuestions][${sequence}][sequence]"
+            name="quiz[quizQuestions][${itemOrder}][sequence]"
             value="${sequence}"
             class="sequence"
         > 
         <input 
             type="hidden"
             id="quiz_quizQuestions_${itemOrder}_question"
-            name="quiz[quizQuestions][${sequence}][question]"
+            name="quiz[quizQuestions][${itemOrder}][question]"
             value="${e.item.dataset.questionId}"
             class="question"
         >
